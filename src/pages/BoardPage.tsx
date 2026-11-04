@@ -55,7 +55,7 @@ export function BoardPage() {
   return (
     <>
       <header className="flex flex-wrap items-center gap-4 p-6">
-        <h1 className="text-2xl font-bold">Pipeline</h1>
+     
         <input
           type="search"
           aria-label="Search applications"
