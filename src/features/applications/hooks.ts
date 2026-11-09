@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { localRepository as repo } from './repository'
+import type { Change } from './ordering'
+import { repository as repo } from './activeRepository'
 import type { Application, NewApplication } from './types'
 
 const QUERY_KEY = ['applications']
@@ -27,6 +28,26 @@ export function useUpdateApplication() {
       const previous = qc.getQueryData<Application[]>(QUERY_KEY)
       qc.setQueryData<Application[]>(QUERY_KEY, (old = []) =>
         old.map((a) => (a.id === id ? { ...a, ...patch } : a)),
+      )
+      return { previous }
+    },
+    onError: (_err, _vars, ctx) => qc.setQueryData(QUERY_KEY, ctx?.previous),
+    onSettled: () => qc.invalidateQueries({ queryKey: QUERY_KEY }),
+  })
+}
+
+// Applies the several card changes from one drag-and-drop as a single optimistic update.
+export function useReorderApplications() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (changes: Change[]) =>
+      Promise.all(changes.map((c) => repo.update(c.id, c.patch))),
+    onMutate: async (changes) => {
+      await qc.cancelQueries({ queryKey: QUERY_KEY })
+      const previous = qc.getQueryData<Application[]>(QUERY_KEY)
+      const byId = new Map(changes.map((c) => [c.id, c.patch]))
+      qc.setQueryData<Application[]>(QUERY_KEY, (old = []) =>
+        old.map((a) => (byId.has(a.id) ? { ...a, ...byId.get(a.id) } : a)),
       )
       return { previous }
     },

@@ -9,6 +9,11 @@ export const STATUS_LABELS: Record<Status, string> = {
   rejected: 'Rejected',
 }
 
+export interface StatusChange {
+  status: Status
+  at: string // ISO timestamp of when the application entered this status
+}
+
 export interface Application {
   id: string
   company: string
@@ -19,10 +24,11 @@ export interface Application {
   salaryMin?: number
   salaryMax?: number
   notes?: string
-  appliedAt?: string // ISO date
-  followUpAt?: string // ISO date, drives reminders
+  appliedAt?: string // ISO date, drives the weekly chart
+  followUpAt?: string // yyyy-MM-dd, drives reminders
   position: number // order within a column
   createdAt: string
+  history?: StatusChange[] // every status the application has been in, oldest first
 }
 
 export type NewApplication = Omit<Application, 'id' | 'createdAt' | 'position'>

@@ -1,5 +1,6 @@
 import { format, startOfWeek, subWeeks } from 'date-fns'
-import type { Application } from '../applications/types'
+import { reachedStatuses } from '../applications/history'
+import type { Application, Status } from '../applications/types'
 
 const WEEK = { weekStartsOn: 1 } as const // weeks start on Monday
 
@@ -8,15 +9,21 @@ export interface FunnelStep {
   count: number
 }
 
-// A job counts as "applied" once it has left the wishlist.
-// Limitation: we only store the current status, not history, so someone
-// rejected after an interview is counted under "Applied" only.
+const reachedAny = (reached: Set<Status>, statuses: Status[]) =>
+  statuses.some((s) => reached.has(s))
+
+// Counts how many applications ever reached each stage, using their status history.
+// An application rejected after an interview still counts as having had an interview.
 export function funnel(items: Application[]): FunnelStep[] {
-  const applied = items.filter((a) =>
-    ['applied', 'interview', 'offer', 'rejected'].includes(a.status),
-  ).length
-  const interview = items.filter((a) => ['interview', 'offer'].includes(a.status)).length
-  const offer = items.filter((a) => a.status === 'offer').length
+  let applied = 0
+  let interview = 0
+  let offer = 0
+  for (const a of items) {
+    const reached = reachedStatuses(a)
+    if (reachedAny(reached, ['applied', 'interview', 'offer', 'rejected'])) applied++
+    if (reachedAny(reached, ['interview', 'offer'])) interview++
+    if (reached.has('offer')) offer++
+  }
   return [
     { stage: 'Applied', count: applied },
     { stage: 'Interview', count: interview },

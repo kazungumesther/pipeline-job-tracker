@@ -1,3 +1,4 @@
+import { historyOf } from './history'
 import type { Application, NewApplication, Status } from './types'
 
 export interface ApplicationRepository {
@@ -25,18 +26,28 @@ export const localRepository: ApplicationRepository = {
   },
   async create(data) {
     const items = read()
-    const inColumn = items.filter((a) => a.status === data.status).length
+    const now = new Date().toISOString()
     const app: Application = {
       ...data,
       id: crypto.randomUUID(),
-      position: inColumn,
-      createdAt: new Date().toISOString(),
+      position: items.filter((a) => a.status === data.status).length,
+      createdAt: now,
+      history: data.history ?? [{ status: data.status, at: now }],
     }
     write([...items, app])
     return app
   },
   async update(id, patch) {
-    const next = read().map((a) => (a.id === id ? { ...a, ...patch } : a))
+    const now = new Date().toISOString()
+    const next = read().map((a) => {
+      if (a.id !== id) return a
+      const merged: Application = { ...a, ...patch }
+      // Every real status change is logged, so analytics can see where an application has been.
+      if (patch.status && patch.status !== a.status) {
+        merged.history = [...historyOf(a), { status: patch.status, at: now }]
+      }
+      return merged
+    })
     write(next)
     return next.find((a) => a.id === id)!
   },

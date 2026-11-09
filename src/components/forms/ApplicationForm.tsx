@@ -1,4 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react'
+import { fromDateInput, toDateInput } from '../../features/applications/dates'
+import { historyOf } from '../../features/applications/history'
 import {
   STATUSES,
   STATUS_LABELS,
@@ -22,6 +24,7 @@ export function ApplicationForm({ initial, onSubmit, onDelete, onCancel }: Props
     company: initial?.company ?? '',
     role: initial?.role ?? '',
     status: (initial?.status ?? 'wishlist') as Status,
+    appliedOn: toDateInput(initial?.appliedAt),
     link: initial?.link ?? '',
     location: initial?.location ?? '',
     salaryMin: initial?.salaryMin?.toString() ?? '',
@@ -44,6 +47,20 @@ export function ApplicationForm({ initial, onSubmit, onDelete, onCancel }: Props
       setError('Maximum salary must be at least the minimum.')
       return
     }
+
+    // Wishlist cards keep whatever date they had. Anything past Wishlist needs a date:
+    // the one the user picked, otherwise the existing one, otherwise today.
+    let appliedAt = initial?.appliedAt
+    if (values.status !== 'wishlist') {
+      if (!values.appliedOn) {
+        appliedAt = initial?.appliedAt ?? new Date().toISOString()
+      } else if (values.appliedOn === toDateInput(initial?.appliedAt)) {
+        appliedAt = initial?.appliedAt // untouched, so keep the exact original timestamp
+      } else {
+        appliedAt = fromDateInput(values.appliedOn)
+      }
+    }
+
     onSubmit({
       company: values.company.trim(),
       role: values.role.trim(),
@@ -54,8 +71,7 @@ export function ApplicationForm({ initial, onSubmit, onDelete, onCancel }: Props
       salaryMax: max,
       followUpAt: values.followUpAt || undefined,
       notes: values.notes.trim() || undefined,
-      appliedAt:
-        initial?.appliedAt ?? (values.status !== 'wishlist' ? new Date().toISOString() : undefined),
+      appliedAt,
     })
   }
 
@@ -89,6 +105,22 @@ export function ApplicationForm({ initial, onSubmit, onDelete, onCancel }: Props
         </label>
       </div>
 
+      {values.status !== 'wishlist' && (
+        <label className="block text-sm">
+          Applied on
+          <input
+            type="date"
+            max={toDateInput(new Date().toISOString())}
+            className={inputClass}
+            value={values.appliedOn}
+            onChange={set('appliedOn')}
+          />
+          <span className="mt-1 block text-xs text-gray-500 dark:text-gray-400">
+            Leave empty to use today’s date.
+          </span>
+        </label>
+      )}
+
       <label className="block text-sm">
         Job link
         <input type="url" className={inputClass} value={values.link} onChange={set('link')} placeholder="https://" />
@@ -114,6 +146,26 @@ export function ApplicationForm({ initial, onSubmit, onDelete, onCancel }: Props
         Notes
         <textarea rows={3} className={inputClass} value={values.notes} onChange={set('notes')} />
       </label>
+
+      {initial && (
+        <section aria-labelledby="history-heading">
+          <h3 id="history-heading" className="text-sm font-medium">
+            Status history
+          </h3>
+          <ol className="mt-1 space-y-0.5 text-xs text-gray-600 dark:text-gray-400">
+            {historyOf(initial).map((h, i) => (
+              <li key={`${h.status}-${h.at}-${i}`}>
+                {STATUS_LABELS[h.status]} ·{' '}
+                {new Date(h.at).toLocaleDateString(undefined, {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
+                })}
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
 
       {error && (
         <p role="alert" className="text-sm text-red-600 dark:text-red-400">

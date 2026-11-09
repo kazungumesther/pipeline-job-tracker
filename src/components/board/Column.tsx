@@ -1,4 +1,5 @@
 import { useDroppable } from '@dnd-kit/core'
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { STATUS_LABELS, type Application, type Status } from '../../features/applications/types'
 import { ApplicationCard } from './ApplicationCard'
 
@@ -23,16 +24,18 @@ export function Column({ status, applications, onOpen }: Props) {
         {STATUS_LABELS[status]}
         <span className="text-gray-500 dark:text-gray-400">{applications.length}</span>
       </h2>
-      <div className="flex min-h-24 flex-col gap-2">
-        {applications.length === 0 && (
-          <p className="rounded-lg border border-dashed border-gray-300 p-3 text-center text-xs text-gray-500 dark:border-gray-700 dark:text-gray-400">
-            Nothing here yet
-          </p>
-        )}
-        {applications.map((a) => (
-          <ApplicationCard key={a.id} application={a} onOpen={onOpen} />
-        ))}
-      </div>
+      <SortableContext items={applications.map((a) => a.id)} strategy={verticalListSortingStrategy}>
+        <div className="flex min-h-24 flex-col gap-2">
+          {applications.length === 0 && (
+            <p className="rounded-lg border border-dashed border-gray-300 p-3 text-center text-xs text-gray-500 dark:border-gray-700 dark:text-gray-400">
+              Nothing here yet
+            </p>
+          )}
+          {applications.map((a) => (
+            <ApplicationCard key={a.id} application={a} onOpen={onOpen} />
+          ))}
+        </div>
+      </SortableContext>
     </section>
   )
 }

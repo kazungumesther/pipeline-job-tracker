@@ -1,4 +1,5 @@
 import {
+  closestCorners,
   DndContext,
   MouseSensor,
   TouchSensor,
@@ -6,9 +7,10 @@ import {
   useSensors,
   type DragEndEvent,
 } from '@dnd-kit/core'
-import { useApplications, useUpdateApplication } from '../../features/applications/hooks'
+import { useApplications, useReorderApplications } from '../../features/applications/hooks'
+import { moveApplication } from '../../features/applications/ordering'
 import { groupByStatus } from '../../features/applications/repository'
-import { STATUSES, type Application, type Status } from '../../features/applications/types'
+import { STATUSES, type Application } from '../../features/applications/types'
 import { Column } from './Column'
 
 interface Props {
@@ -18,7 +20,7 @@ interface Props {
 
 export function Board({ visible, onOpen }: Props) {
   const { data: all = [] } = useApplications()
-  const update = useUpdateApplication()
+  const reorder = useReorderApplications()
 
   // Mouse: a 5px move starts a drag, so a plain click still opens the card.
   // Touch: a short press-and-hold starts a drag, so swiping still scrolls the board.
@@ -28,24 +30,16 @@ export function Board({ visible, onOpen }: Props) {
   )
   const groups = groupByStatus(visible)
 
+  // The move is worked out against the full list, not just the visible cards,
+  // so searching or filtering never scrambles the saved order.
   function handleDragEnd({ active, over }: DragEndEvent) {
     if (!over) return
-    const newStatus = over.id as Status
-    const app = all.find((a) => a.id === active.id)
-    if (!app || app.status === newStatus) return
-    update.mutate({
-      id: app.id,
-      patch: {
-        status: newStatus,
-        position: all.filter((a) => a.status === newStatus).length,
-        appliedAt:
-          newStatus === 'applied' && !app.appliedAt ? new Date().toISOString() : app.appliedAt,
-      },
-    })
+    const changes = moveApplication(all, String(active.id), String(over.id))
+    if (changes.length > 0) reorder.mutate(changes)
   }
 
   return (
-    <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+    <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
       <div className="flex gap-4 overflow-x-auto p-4 md:p-6">
         {STATUSES.map((status) => (
           <Column key={status} status={status} applications={groups[status] ?? []} onOpen={onOpen} />

@@ -1,4 +1,4 @@
-import { useDraggable } from '@dnd-kit/core'
+import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { needsFollowUp } from '../../features/applications/filters'
 import type { Application } from '../../features/applications/types'
@@ -9,14 +9,14 @@ interface Props {
 }
 
 export function ApplicationCard({ application, onOpen }: Props) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: application.id,
   })
 
   return (
     <article
       ref={setNodeRef}
-      style={{ transform: CSS.Translate.toString(transform) }}
+      style={{ transform: CSS.Transform.toString(transform), transition }}
       onClick={() => onOpen(application)}
       onKeyDown={(e) => {
         if (e.key === 'Enter') onOpen(application)
