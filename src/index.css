@@ -1,1 +1,12 @@
 @import "tailwindcss";
+
+/* Dark mode is driven by a `dark` class on <html> (see hooks/useTheme.ts). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Makes native controls (select menus, date pickers, scrollbars) follow the theme. */
+:root {
+  color-scheme: light;
+}
+:root.dark {
+  color-scheme: dark;
+}

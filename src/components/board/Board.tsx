@@ -1,4 +1,11 @@
-import { DndContext, PointerSensor, useSensor, useSensors, type DragEndEvent } from '@dnd-kit/core'
+import {
+  DndContext,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core'
 import { useApplications, useUpdateApplication } from '../../features/applications/hooks'
 import { groupByStatus } from '../../features/applications/repository'
 import { STATUSES, type Application, type Status } from '../../features/applications/types'
@@ -12,7 +19,13 @@ interface Props {
 export function Board({ visible, onOpen }: Props) {
   const { data: all = [] } = useApplications()
   const update = useUpdateApplication()
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }))
+
+  // Mouse: a 5px move starts a drag, so a plain click still opens the card.
+  // Touch: a short press-and-hold starts a drag, so swiping still scrolls the board.
+  const sensors = useSensors(
+    useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 8 } }),
+  )
   const groups = groupByStatus(visible)
 
   function handleDragEnd({ active, over }: DragEndEvent) {
@@ -33,7 +46,7 @@ export function Board({ visible, onOpen }: Props) {
 
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-      <div className="flex gap-4 overflow-x-auto p-6">
+      <div className="flex gap-4 overflow-x-auto p-4 md:p-6">
         {STATUSES.map((status) => (
           <Column key={status} status={status} applications={groups[status] ?? []} onOpen={onOpen} />
         ))}

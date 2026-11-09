@@ -14,7 +14,8 @@ interface Props {
   onCancel: () => void
 }
 
-const inputClass = 'mt-1 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2'
+const inputClass =
+  'mt-1 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 dark:border-gray-700'
 
 export function ApplicationForm({ initial, onSubmit, onDelete, onCancel }: Props) {
   const [values, setValues] = useState({
@@ -54,13 +55,13 @@ export function ApplicationForm({ initial, onSubmit, onDelete, onCancel }: Props
       followUpAt: values.followUpAt || undefined,
       notes: values.notes.trim() || undefined,
       appliedAt:
-        initial?.appliedAt ?? (values.status === 'applied' ? new Date().toISOString() : undefined),
+        initial?.appliedAt ?? (values.status !== 'wishlist' ? new Date().toISOString() : undefined),
     })
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <label className="block text-sm">
           Company *
           <input required className={inputClass} value={values.company} onChange={set('company')} />
@@ -71,7 +72,7 @@ export function ApplicationForm({ initial, onSubmit, onDelete, onCancel }: Props
         </label>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <label className="block text-sm">
           Status
           <select className={inputClass} value={values.status} onChange={set('status')}>
@@ -115,24 +116,32 @@ export function ApplicationForm({ initial, onSubmit, onDelete, onCancel }: Props
       </label>
 
       {error && (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-red-600 dark:text-red-400">
           {error}
         </p>
       )}
 
       <div className="flex items-center justify-between pt-2">
         {onDelete ? (
-          <button type="button" onClick={onDelete} className="text-sm text-red-600 hover:underline">
+          <button
+            type="button"
+            onClick={onDelete}
+            className="text-sm text-red-600 hover:underline dark:text-red-400"
+          >
             Delete
           </button>
         ) : (
           <span />
         )}
         <div className="flex gap-2">
-          <button type="button" onClick={onCancel} className="rounded-lg px-4 py-2 text-sm">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="rounded-lg px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
             Cancel
           </button>
-          <button type="submit" className="rounded-lg bg-blue-600 px-4 py-2 text-sm text-white">
+          <button type="submit" className="rounded-lg bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700">
             {initial ? 'Save' : 'Add application'}
           </button>
         </div>
