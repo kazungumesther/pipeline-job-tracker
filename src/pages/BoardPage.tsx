@@ -79,8 +79,8 @@ export function BoardPage() {
       for (const sample of buildSampleApplications()) {
         await create.mutateAsync(sample)
       }
-    } catch {
-      
+       } catch (error) {
+      console.error('Failed to load sample applications:', error)
     } finally {
       setSeeding(false)
     }
