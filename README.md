@@ -1,5 +1,6 @@
 # Pipeline
-https://pipeline-job-tracker-one.vercel.app/
+
+Find it on vercel: https://pipeline-job-tracker-one.vercel.app/
 
 [![CI](https://github.com/kazungumesther/pipeline-job-tracker/actions/workflows/ci.yml/badge.svg)](https://github.com/kazungumesther/pipeline-job-tracker/actions/workflows/ci.yml)
 
