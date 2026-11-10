@@ -94,13 +94,6 @@ With no configuration the app runs in **local mode**: no sign-in, and your data 
 | `npm run lint` | Lint the code |
 | `npm run build` | Type-check and build for production |
 
-## Limitations and what I'd do next
 
-- **No end-to-end tests yet.** Unit and component tests cover the logic and forms. A Playwright test of the add, drag and edit flow would be the next addition.
-- **Reminders are visual only.** Overdue follow-ups are flagged in the app, but there are no email or push notifications.
-- **Drag and drop is pointer-only.** Moving a card by keyboard isn't supported yet. The Status field in the edit form is the accessible alternative.
-- **History isn't editable,** and the "applied on" date and the history timestamps are stored separately, so they can differ if you backdate an application.
-- **Local data doesn't migrate.** Applications saved in local mode stay in that browser and aren't copied to your account.
-PIPELINE_EOF
 
-echo "README written"
+
