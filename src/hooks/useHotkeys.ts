@@ -7,8 +7,7 @@ function isTyping(target: EventTarget | null) {
   return target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName)
 }
 
-// Single-key shortcuts such as "n" or "/". They are ignored while the user is typing
-// in a field or holding a modifier key, so they never fight with normal input.
+
 export function useHotkeys(handlers: Handlers, enabled = true) {
   const latest = useRef(handlers)
 

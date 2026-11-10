@@ -22,16 +22,14 @@ export function Board({ visible, onOpen }: Props) {
   const { data: all = [] } = useApplications()
   const reorder = useReorderApplications()
 
-  // Mouse: a 5px move starts a drag, so a plain click still opens the card.
-  // Touch: a short press-and-hold starts a drag, so swiping still scrolls the board.
+  
   const sensors = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
     useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 8 } }),
   )
   const groups = groupByStatus(visible)
 
-  // The move is worked out against the full list, not just the visible cards,
-  // so searching or filtering never scrambles the saved order.
+  
   function handleDragEnd({ active, over }: DragEndEvent) {
     if (!over) return
     const changes = moveApplication(all, String(active.id), String(over.id))

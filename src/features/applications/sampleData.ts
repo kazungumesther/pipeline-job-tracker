@@ -2,8 +2,7 @@ import type { NewApplication } from './types'
 
 const DAY = 24 * 60 * 60 * 1000
 
-// Fictional companies, with dates spread over several weeks so the analytics
-// charts have something to show. Used by the "Load sample data" button.
+
 export function buildSampleApplications(now = new Date()): NewApplication[] {
   const daysAgo = (n: number) => new Date(now.getTime() - n * DAY)
   const iso = (d: Date) => d.toISOString()

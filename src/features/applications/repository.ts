@@ -42,7 +42,7 @@ export const localRepository: ApplicationRepository = {
     const next = read().map((a) => {
       if (a.id !== id) return a
       const merged: Application = { ...a, ...patch }
-      // Every real status change is logged, so analytics can see where an application has been.
+      
       if (patch.status && patch.status !== a.status) {
         merged.history = [...historyOf(a), { status: patch.status, at: now }]
       }

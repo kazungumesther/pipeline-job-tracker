@@ -24,8 +24,7 @@ function db() {
   return supabase
 }
 
-// camelCase fields -> snake_case columns. A key that is present but undefined means
-// "clear this field", so it is written as null.
+
 export function toRow(patch: Partial<Application>): Row {
   const row: Row = {}
   for (const [field, column] of Object.entries(FIELD_TO_COLUMN)) {
@@ -34,7 +33,7 @@ export function toRow(patch: Partial<Application>): Row {
   return row
 }
 
-// snake_case columns -> camelCase fields. Database nulls become undefined.
+
 export function fromRow(row: Row): Application {
   const app: Record<string, unknown> = {
     id: row.id,
@@ -79,7 +78,7 @@ export const supabaseRepository: ApplicationRepository = {
   async update(id, patch) {
     const row = toRow(patch)
 
-    // Log real status changes, the same way the local repository does.
+    
     if (patch.status) {
       const { data: current, error: readError } = await db()
         .from('applications')

@@ -11,7 +11,7 @@ export const STATUS_LABELS: Record<Status, string> = {
 
 export interface StatusChange {
   status: Status
-  at: string // ISO timestamp of when the application entered this status
+  at: string 
 }
 
 export interface Application {
@@ -24,11 +24,11 @@ export interface Application {
   salaryMin?: number
   salaryMax?: number
   notes?: string
-  appliedAt?: string // ISO date, drives the weekly chart
-  followUpAt?: string // yyyy-MM-dd, drives reminders
-  position: number // order within a column
+  appliedAt?: string 
+  followUpAt?: string 
+  position: number 
   createdAt: string
-  history?: StatusChange[] // every status the application has been in, oldest first
+  history?: StatusChange[] 
 }
 
 export type NewApplication = Omit<Application, 'id' | 'createdAt' | 'position'>

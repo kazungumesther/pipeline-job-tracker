@@ -75,12 +75,12 @@ export function BoardPage() {
     create.reset()
     setSeeding(true)
     try {
-      // one at a time so each card gets the right position in its column
+    
       for (const sample of buildSampleApplications()) {
         await create.mutateAsync(sample)
       }
     } catch {
-      /* the error banner below tells the user */
+      
     } finally {
       setSeeding(false)
     }

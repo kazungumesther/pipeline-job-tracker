@@ -17,7 +17,7 @@ export function useCreateApplication() {
   })
 }
 
-// Optimistic update: the UI changes instantly and rolls back if the save fails
+
 export function useUpdateApplication() {
   const qc = useQueryClient()
   return useMutation({
@@ -36,7 +36,7 @@ export function useUpdateApplication() {
   })
 }
 
-// Applies the several card changes from one drag-and-drop as a single optimistic update.
+
 export function useReorderApplications() {
   const qc = useQueryClient()
   return useMutation({

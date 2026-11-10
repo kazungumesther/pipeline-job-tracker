@@ -2,8 +2,7 @@ import { format, startOfWeek, subWeeks } from 'date-fns'
 import { reachedStatuses } from '../applications/history'
 import type { Application, Status } from '../applications/types'
 
-const WEEK = { weekStartsOn: 1 } as const // weeks start on Monday
-
+const WEEK = { weekStartsOn: 1 } as const 
 export interface FunnelStep {
   stage: string
   count: number
@@ -12,8 +11,7 @@ export interface FunnelStep {
 const reachedAny = (reached: Set<Status>, statuses: Status[]) =>
   statuses.some((s) => reached.has(s))
 
-// Counts how many applications ever reached each stage, using their status history.
-// An application rejected after an interview still counts as having had an interview.
+
 export function funnel(items: Application[]): FunnelStep[] {
   let applied = 0
   let interview = 0
@@ -31,7 +29,7 @@ export function funnel(items: Application[]): FunnelStep[] {
   ]
 }
 
-// Share of applications that got past "applied" (interview or offer).
+
 export function responseRate(items: Application[]): number {
   const [applied, interview] = funnel(items)
   return applied.count === 0 ? 0 : interview.count / applied.count

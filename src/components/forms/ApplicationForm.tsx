@@ -48,14 +48,13 @@ export function ApplicationForm({ initial, onSubmit, onDelete, onCancel }: Props
       return
     }
 
-    // Wishlist cards keep whatever date they had. Anything past Wishlist needs a date:
-    // the one the user picked, otherwise the existing one, otherwise today.
+    
     let appliedAt = initial?.appliedAt
     if (values.status !== 'wishlist') {
       if (!values.appliedOn) {
         appliedAt = initial?.appliedAt ?? new Date().toISOString()
       } else if (values.appliedOn === toDateInput(initial?.appliedAt)) {
-        appliedAt = initial?.appliedAt // untouched, so keep the exact original timestamp
+        appliedAt = initial?.appliedAt 
       } else {
         appliedAt = fromDateInput(values.appliedOn)
       }

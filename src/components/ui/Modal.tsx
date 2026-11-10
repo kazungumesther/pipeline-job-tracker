@@ -22,7 +22,7 @@ export function Modal({ open, onClose, title, children }: Props) {
       ref={ref}
       onClose={onClose}
       onClick={(e) => {
-        if (e.target === ref.current) onClose() // click on the backdrop
+        if (e.target === ref.current) onClose() 
       }}
       aria-labelledby="modal-title"
       className="m-auto w-[calc(100%-2rem)] max-w-lg rounded-xl bg-white text-gray-900 backdrop:bg-black/50 dark:bg-gray-900 dark:text-gray-100"

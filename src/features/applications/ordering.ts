@@ -15,9 +15,7 @@ function move<T>(list: T[], from: number, to: number): T[] {
   return copy
 }
 
-// Works out what has to change when a card is dropped on another card (overId is a
-// card id) or on an empty area of a column (overId is a status name). It returns only
-// the cards that actually change, and renumbers positions so they stay 0, 1, 2...
+
 export function moveApplication(
   items: Application[],
   activeId: string,

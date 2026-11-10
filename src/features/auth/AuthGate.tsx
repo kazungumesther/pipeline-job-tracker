@@ -4,7 +4,7 @@ import type { Session } from '@supabase/supabase-js'
 import { supabase } from '../../lib/supabase'
 import { LoginForm } from './LoginForm'
 
-// In local-only mode (no Supabase env vars) this renders its children straight away.
+
 export function AuthGate({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [ready, setReady] = useState(!supabase)
@@ -18,7 +18,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
     })
     const { data } = supabase.auth.onAuthStateChange((_event, next) => {
       setSession(next)
-      // don't leak one user's cached data into the next session
+     
       if (!next) queryClient.clear()
     })
     return () => data.subscription.unsubscribe()

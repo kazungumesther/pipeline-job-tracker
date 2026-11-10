@@ -35,14 +35,14 @@ describe('funnel', () => {
 })
 
 describe('applicationsPerWeek', () => {
-  const now = new Date('2026-11-11T12:00:00') // a Wednesday
+  const now = new Date('2026-11-11T12:00:00') 
 
   it('buckets applications by week, oldest first', () => {
     const items = [
-      make('1', 'applied', '2026-11-10T09:00:00'), // this week
-      make('2', 'applied', '2026-11-04T09:00:00'), // last week
-      make('3', 'applied', '2026-11-05T09:00:00'), // last week
-      make('4', 'wishlist'), // no appliedAt, ignored
+      make('1', 'applied', '2026-11-10T09:00:00'), 
+      make('2', 'applied', '2026-11-04T09:00:00'), 
+      make('3', 'applied', '2026-11-05T09:00:00'), 
+      make('4', 'wishlist'), 
     ]
     const result = applicationsPerWeek(items, 4, now)
     expect(result).toHaveLength(4)

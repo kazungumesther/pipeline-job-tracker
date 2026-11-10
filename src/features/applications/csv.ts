@@ -16,8 +16,7 @@ const COLUMNS: { header: string; value: (a: Application) => string | number | un
 function cell(value: string | number | undefined): string {
   if (value === undefined) return ''
   let text = String(value)
-  // Spreadsheet apps run cells that start with = + - @ as formulas, which is a known
-  // injection risk for exported data. A leading quote makes them plain text.
+  
   if (/^[=+\-@\t\r]/.test(text)) text = `'${text}`
   return /[",\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text
 }
@@ -29,7 +28,7 @@ export function toCsv(items: Application[]): string {
 }
 
 export function downloadCsv(items: Application[], filename = 'pipeline-applications.csv') {
-  // The BOM makes Excel read the file as UTF-8.
+  
   const blob = new Blob(['\ufeff' + toCsv(items)], { type: 'text/csv;charset=utf-8' })
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
