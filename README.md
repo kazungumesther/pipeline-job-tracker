@@ -1,10 +1,10 @@
 # Pipeline
 
-[![CI](https://github.com/YOUR-USERNAME/pipeline-job-tracker/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR-USERNAME/pipeline-job-tracker/actions/workflows/ci.yml)
+[![CI](https://github.com/kazungumesther/pipeline-job-tracker/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR-USERNAME/pipeline-job-tracker/actions/workflows/ci.yml)
 
 **Track every job application from wishlist to offer, and see where your search is working.**
 
-![Pipeline board](docs/board.png)
+![Pipeline board](Screenshot from 2026-11-10 09-14-07.png)
 
 ## Why I built it
 
@@ -22,7 +22,7 @@ I'm finishing my degree and applying for frontend roles. I wanted one place to s
 - **CSV export**, and a "Load sample data" button so you can look around an empty board
 - **Accounts and cloud sync** through Supabase, with Row Level Security so each user only sees their own data
 
-![Analytics](docs/analytics.png)
+![Analytics](Screenshot from 2026-11-10 09-14-18.png)
 
 ## Tech stack
 
